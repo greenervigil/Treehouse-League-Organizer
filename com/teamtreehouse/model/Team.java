@@ -1,5 +1,7 @@
 package com.teamtreehouse.model;
 
+import java.util.List;
+
 /**
  * Created by danielvigil on 8/16/16.
  */
@@ -7,6 +9,7 @@ public class Team {
 
     private String name;
     private String coach;
+    private List<String> mTeamMembers;
     private static final int MAX_MEMBERS = 11;
 
     public Team(String name, String coach) {
