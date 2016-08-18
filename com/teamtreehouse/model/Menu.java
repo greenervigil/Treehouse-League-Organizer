@@ -16,49 +16,50 @@ public class Menu {
         System.out.println("####################################");
         System.out.println("############### Menu ###############");
         System.out.println("####################################\n");
-        System.out.println("Select the menu number:  ");
-        System.out.println("1 - Organizer");
-        System.out.println("2 - Coach");
-        System.out.println("3 - Exit");
-        System.out.print("Selection:   ");
+        System.out.println("------ Organizer -------");
+        System.out.println("1 - Create New Team");
+        System.out.println("2 - Add Player to a Team");
+        System.out.println("3 - Remove Player From a Team");
+        System.out.println("-------- Coach ---------");
+        System.out.println("4 - Team Roster");
+        System.out.println("------- Reports --------");
+        System.out.println("5 - Team By Height");
+        System.out.println("6 - League Balance Report");
+        System.out.println("7 - Exit");
+        System.out.print("\nSelection:   ");
 
         int input = Integer.parseInt(mReader.readLine());
-        if (input == 1){
-            System.out.print("\033[H\033[2J");
-            organizerMenu();
-        } else if (input == 2){
-            System.out.print("\033[H\033[2J");
-            coachMenu();
-        } else if (input == 3) {
-            System.exit(0);
-        } else {
-            System.out.println("That is an incorrect menu item.  Try again.");
-            System.out.print("\033[H\033[2J");
-            menu();
+        while(input != 0 ) {
+            switch (input) {
+                case 1:
+                    //TODO Create new team
+                    break;
+                case 2:
+                    //TODO Add a player to a team
+                    break;
+                case 3:
+                    //TODO Remove a player from an existing team
+                    break;
+                case 4:
+                    //TODO Display team roster
+                    break;
+                case 5:
+                    //TODO Team by height report
+                    break;
+                case 6:
+                    //TODO League Balance Report
+                    break;
+                case 7:
+                    System.exit(0);
+                default:
+                    System.out.println("I do not know what that is.  try again");
+
+            }
         }
 
+
     }
 
-    public static void coachMenu() throws IOException {
-        System.out.println("####################################");
-        System.out.println("############## Coach ###############");
-        System.out.println("####################################\n");
-        System.out.println("Select the menu number:  ");
-        System.out.println("1 - Organizer");
-        System.out.println("2 - Coach");
-        System.out.println("3 - Exit");
-        System.out.print("Selection:   ");
-    }
 
-    public static void organizerMenu() throws IOException {
-        System.out.println("####################################");
-        System.out.println("############ Organizer #############");
-        System.out.println("####################################\n");
-        System.out.println("Select the menu number:  ");
-        System.out.println("1 - Organizer");
-        System.out.println("2 - Coach");
-        System.out.println("3 - Exit");
-        System.out.print("Selection:   ");
-    }
 
 }

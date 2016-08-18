@@ -9,7 +9,7 @@ public class Team {
 
     private String name;
     private String coach;
-    private List<String> mTeamMembers;
+    private List<Player> mTeamMembers;
     private static final int MAX_MEMBERS = 11;
 
     public Team(String name, String coach) {
