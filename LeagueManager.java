@@ -1,6 +1,7 @@
 import com.teamtreehouse.model.Menu;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
+import com.teamtreehouse.model.Team;
 
 import java.io.IOException;
 
@@ -12,11 +13,11 @@ public class LeagueManager {
     Player[] players = Players.load();
     System.out.printf("There are currently %d registered players.%n", players.length);
     // Your code here!
-
+      System.out.printf("You can create %d teams.%n", (players.length / Team.MAX_MEMBERS));
 
         Menu menu = new Menu();
       try {
-          menu();
+          menu(players);
       } catch (IOException e) {
           e.printStackTrace();
       }

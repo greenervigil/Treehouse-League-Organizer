@@ -3,6 +3,8 @@ package com.teamtreehouse.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by danielvigil on 8/17/16.
@@ -10,9 +12,10 @@ import java.io.InputStreamReader;
 public class Menu {
 
     private static BufferedReader mReader = new BufferedReader(new InputStreamReader(System.in));;
+    private static List<Team> teams = new ArrayList<>();
 
     //Main menu
-    public static void menu() throws IOException {
+    public static void menu(Player [] players) throws IOException {
         System.out.println("####################################");
         System.out.println("############### Menu ###############");
         System.out.println("####################################\n");
@@ -32,7 +35,7 @@ public class Menu {
         while(input != 0 ) {
             switch (input) {
                 case 1:
-                    //TODO Create new team
+                    createTeam(players);
                     break;
                 case 2:
                     //TODO Add a player to a team
@@ -58,6 +61,18 @@ public class Menu {
         }
 
 
+    }
+
+    public static List<Team> createTeam(Player [] players) throws IOException{
+        if(teams.size() <= (players.length / Team.MAX_MEMBERS)) {
+            System.out.println("What is the name of the new team: ");
+            String name = mReader.readLine();
+            System.out.println("Who is the coach:  ");
+            String coach = mReader.readLine();
+            Team team = new Team(name, coach);
+            teams.add(team);
+        }
+        return teams;
     }
 
 
