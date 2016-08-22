@@ -1,5 +1,6 @@
 package com.teamtreehouse.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class Team {
     public Team(String name, String coach) {
         this.name = name;
         this.coach = coach;
+        mTeamMembers = new ArrayList<>();
     }
 
     public String getName() {
@@ -31,5 +33,13 @@ public class Team {
 
     public void setCoach(String coach) {
         this.coach = coach;
+    }
+
+    public void addPlayer(Player player) {
+        mTeamMembers.add(player);
+    }
+
+    public void removePlayer(Player player) {
+        mTeamMembers.remove(player);
     }
 }

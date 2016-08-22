@@ -38,26 +38,37 @@ public class Menu {
 
     public void run() {
         String input = "";
+        Team team;
+        Player player;
 
         do {
             try {
                 input = promptAction();
                 switch (input) {
                     case "1":
-                        System.out.println(checkAvailableTeams(mPlayers)
-                        + " " + mTeams.size());
-                        if (checkAvailableTeams(mPlayers)) {
-                            System.out.println("There is no more room for a new team. ");
-                        } else {
-                            promptNewTeam();
+                        if (!isTeamAvailable() || checkAvailableTeams(mPlayers)){
+                            mTeams.add(promptNewTeam());
                             System.out.println("Team added.");
+                        } else {
+                            System.out.println("There is no more room for a new team. ");
                         }
+
                         break;
                     case "2":
-                        //TODO Add a player to a team
+
+                        team = getTeamSelection();
+                        player = getPlayerSelection();
+                        if (!isTeamAvailable()) {
+                            System.out.println("There are no teams created yet.  Please add a team first.");
+                        }else {
+                            team.addPlayer(player);
+                        }
                         break;
                     case "3":
-                        //TODO Remove a player from an existing team
+
+                        team = getTeamSelection();
+                        player = getPlayerSelection();
+                        team.removePlayer(player);
                         break;
                     case "4":
                         //TODO Display team roster
@@ -85,6 +96,15 @@ public class Menu {
     }
 
 
+    private String promptAction() throws IOException{
+        for (Map.Entry<String, String> option : mMenu.entrySet()) {
+            System.out.printf("%s - %s %n", option.getKey(), option.getValue());
+        }
+        System.out.print("What do you want to do: ");
+        String choice = mReader.readLine();
+        return choice.trim().toLowerCase();
+    }
+
     private Team promptNewTeam() throws IOException{
         return new Team(promptForTeamName(), promptForCoachName());
     }
@@ -99,20 +119,42 @@ public class Menu {
         return mReader.readLine();
     }
 
-    private Boolean checkAvailableTeams(Player [] players){
-        if (mTeams == null || mTeams.size() == 0 ){
-            return false;
-        }
-        return mTeams.size() <= (players.length / Team.MAX_MEMBERS);
+    private boolean checkAvailableTeams(Player [] players){
+        return (mTeams.size() < (players.length / Team.MAX_MEMBERS));
     }
 
-    private String promptAction() throws IOException{
-        for (Map.Entry<String, String> option : mMenu.entrySet()) {
-            System.out.printf("%s - %s %n", option.getKey(), option.getValue());
+    private int promptTeamChoice(List<Team> teams) throws IOException{
+        int counter = 1;
+        for(Team team : teams){
+            System.out.printf("%d ).  %s%n", counter, team.getName());
+            counter++;
         }
-        System.out.print("What do you want to do: ");
-        String choice = mReader.readLine();
-        return choice.trim().toLowerCase();
+        System.out.print("Select a team:  ");
+        int choice = Integer.parseInt(mReader.readLine().trim());
+        return choice - 1;
     }
 
+    private int promptPlayerChoice(Player [] players) throws IOException{
+        int counter =1;
+        for (Player player : players) {
+            System.out.printf("%d).  %s\t\t%s\t%s%n", counter, player.getLastName(),
+                    player.getFirstName(), player.getHeightInInches());
+            counter++;
+        }
+        System.out.print("Select a player:   ");
+        int choice = Integer.parseInt(mReader.readLine().trim());
+        return choice -1;
+    }
+
+    private Team getTeamSelection() throws IOException{
+        return mTeams.get(promptTeamChoice(mTeams));
+    }
+
+    private Player getPlayerSelection() throws IOException {
+        return mPlayers[promptPlayerChoice(mPlayers)];
+    }
+
+    private boolean isTeamAvailable() {
+        return (mTeams == null || mTeams.size() == 0);
+    }
 }
