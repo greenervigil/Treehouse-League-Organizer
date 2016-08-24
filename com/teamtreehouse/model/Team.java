@@ -31,6 +31,10 @@ public class Team {
         return coach;
     }
 
+    public List<Player> getTeamMembers() {
+        return mTeamMembers;
+    }
+
     public void setCoach(String coach) {
         this.coach = coach;
     }
@@ -39,7 +43,30 @@ public class Team {
         mTeamMembers.add(player);
     }
 
+    public void displayTeam() {
+
+        for (Player player : mTeamMembers) {
+            System.out.printf("%s\t%s\t%s\t%s%n", player.getLastName(),
+                    player.getFirstName(), player.getHeightInInches(),
+                    player.isPreviousExperience());
+        }
+    }
+
+    public void displayTeamByHeight() {
+
+    }
+
     public void removePlayer(Player player) {
         mTeamMembers.remove(player);
+    }
+
+    public int experienceTally () {
+        int count = 0;
+        for (Player player : mTeamMembers) {
+            if(player.isPreviousExperience()) {
+                count++;
+            }
+        }
+        return count;
     }
 }

@@ -3,24 +3,19 @@ package com.teamtreehouse.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * Created by danielvigil on 8/17/16.
- */
+
 public class Menu {
 
     private BufferedReader mReader;
-    private Player [] mPlayers;
+    private List<Player> mPlayers;
     private Map<String, String> mMenu;
     private List<Team> mTeams;
 
 
     public Menu(Player [] players) {
-        mPlayers = players;
+        mPlayers = toList(players);
         mTeams = new ArrayList<>();
         mReader  = new BufferedReader(new InputStreamReader(System.in));
         mMenu = new HashMap<>();
@@ -46,6 +41,7 @@ public class Menu {
                 input = promptAction();
                 switch (input) {
                     case "1":
+                        //create new team
                         if (!isTeamAvailable() || checkAvailableTeams(mPlayers)){
                             mTeams.add(promptNewTeam());
                             System.out.println("Team added.");
@@ -55,29 +51,34 @@ public class Menu {
 
                         break;
                     case "2":
-
+                        //Add player to team
                         team = getTeamSelection();
-                        player = getPlayerSelection();
-                        if (!isTeamAvailable()) {
+                        player = getPlayerSelection(mPlayers);
+                        if (isTeamAvailable()) {
                             System.out.println("There are no teams created yet.  Please add a team first.");
                         }else {
                             team.addPlayer(player);
                         }
                         break;
                     case "3":
-
+                        //Remove Player from team
                         team = getTeamSelection();
-                        player = getPlayerSelection();
-                        team.removePlayer(player);
+                        mPlayers.add(getPlayerSelection(team.getTeamMembers()));
                         break;
                     case "4":
-                        //TODO Display team roster
+                        //Team Roster in alphabetical order
+                        team = getTeamSelection();
+                        team.displayTeam();
                         break;
                     case "5":
                         //TODO Team by height report
+                        //Team report sorted by height
+                        team = getTeamSelection();
+                        team.displayTeamByHeight();
                         break;
                     case "6":
-                        //TODO League Balance Report
+                        //League Balance report by team
+                        leagueBalance();
                         break;
                     case "7":
                         System.out.println("Good Bye!!");
@@ -119,8 +120,8 @@ public class Menu {
         return mReader.readLine();
     }
 
-    private boolean checkAvailableTeams(Player [] players){
-        return (mTeams.size() < (players.length / Team.MAX_MEMBERS));
+    private boolean checkAvailableTeams(List<Player> players){
+        return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
     }
 
     private int promptTeamChoice(List<Team> teams) throws IOException{
@@ -134,11 +135,11 @@ public class Menu {
         return choice - 1;
     }
 
-    private int promptPlayerChoice(Player [] players) throws IOException{
+    private int promptPlayerChoice(List<Player> players) throws IOException{
         int counter =1;
         for (Player player : players) {
-            System.out.printf("%d).  %s\t\t%s\t%s%n", counter, player.getLastName(),
-                    player.getFirstName(), player.getHeightInInches());
+            System.out.printf("%d).  %s\t\t%s\t%s\t%s %n", counter, player.getLastName(),
+                    player.getFirstName(), player.getHeightInInches(), player.isPreviousExperience());
             counter++;
         }
         System.out.print("Select a player:   ");
@@ -150,11 +151,27 @@ public class Menu {
         return mTeams.get(promptTeamChoice(mTeams));
     }
 
-    private Player getPlayerSelection() throws IOException {
-        return mPlayers[promptPlayerChoice(mPlayers)];
+    private Player getPlayerSelection(List<Player> players) throws IOException {
+        return players.remove(promptPlayerChoice(players));
     }
 
     private boolean isTeamAvailable() {
+        System.out.println((mTeams == null || mTeams.size() == 0));
         return (mTeams == null || mTeams.size() == 0);
+    }
+
+    private void leagueBalance() {
+        for (Team team : mTeams){
+            System.out.println(team.getName());
+            System.out.printf("Experienced Team members:  %d%n", team.experienceTally());
+            System.out.printf("Inexperienced Team members:  %d%n",
+                    (team.experienceTally() - team.getTeamMembers().size()));
+        }
+    }
+
+    private List<Player> toList(Player [] players) {
+        List<Player> playerList = new ArrayList<>();
+        Collections.addAll(playerList, players);
+        return playerList;
     }
 }
