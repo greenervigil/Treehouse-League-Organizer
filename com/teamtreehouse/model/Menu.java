@@ -42,7 +42,7 @@ public class Menu {
                 switch (input) {
                     case "1":
                         //create new team
-                        if (!isTeamAvailable() || checkAvailableTeams(mPlayers)){
+                        if ((mTeams.size() < (mPlayers.size() / Team.MAX_MEMBERS)) || isTeamAvailable() ){
                             mTeams.add(promptNewTeam());
                             System.out.println("Team added.");
                         } else {
@@ -71,7 +71,7 @@ public class Menu {
                         team.displayTeam();
                         break;
                     case "5":
-                        //TODO Team by height report
+
                         //Team report sorted by height
                         team = getTeamSelection();
                         team.displayTeamByHeight();
@@ -121,6 +121,7 @@ public class Menu {
     }
 
     private boolean checkAvailableTeams(List<Player> players){
+        System.out.println((mTeams.size() < (players.size() / Team.MAX_MEMBERS)));
         return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
     }
 
@@ -156,7 +157,6 @@ public class Menu {
     }
 
     private boolean isTeamAvailable() {
-        System.out.println((mTeams == null || mTeams.size() == 0));
         return (mTeams == null || mTeams.size() == 0);
     }
 
