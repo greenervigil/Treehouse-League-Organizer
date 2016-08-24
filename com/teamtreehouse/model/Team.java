@@ -1,13 +1,8 @@
 package com.teamtreehouse.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * Created by danielvigil on 8/16/16.
- */
+
 public class Team {
 
     private String name;
@@ -25,10 +20,6 @@ public class Team {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCoach() {
         return coach;
     }
@@ -37,43 +28,13 @@ public class Team {
         return mTeamMembers;
     }
 
-    public void setCoach(String coach) {
-        this.coach = coach;
-    }
-
     public void addPlayer(Player player) {
-        mTeamMembers.add(player);
-    }
-
-    public void displayTeam() {
-
-        for (Player player : mTeamMembers) {
-            System.out.printf("%s\t%s\t%s\t%s%n", player.getLastName(),
-                    player.getFirstName(), player.getHeightInInches(),
-                    player.isPreviousExperience());
+        if (mTeamMembers.size() < MAX_MEMBERS) {
+            mTeamMembers.add(player);
+        } else {
+            System.out.println("Team is full.  ");
         }
     }
-
-    public void displayTeamByHeight() {
-        Map<Integer, Integer> heights = new HashMap<>();
-        for (Player player : mTeamMembers) {
-            Integer count = heights.get(player.getHeightInInches());
-            if (count == null) {
-                count = 0;
-            }
-            count++;
-            heights.put(player.getHeightInInches(), count);
-        }
-        System.out.println();
-        System.out.println("---------------------------------");
-        System.out.println("Team name: " + getName() + "    Coach: " + getCoach());
-        System.out.println("---------------------------------");
-        System.out.println(heights);
-    }
-
-//    public void removePlayer(Player player) {
-//        mTeamMembers.remove(player);
-//    }
 
     public int experienceTally () {
         int count = 0;
@@ -83,5 +44,46 @@ public class Team {
             }
         }
         return count;
+    }
+
+    //REPORTING
+    private void header() {
+        System.out.println("---------------------------------");
+        System.out.println("Team name: " + getName() + "  Coach: " + getCoach());
+        System.out.println("---------------------------------");
+    }
+
+    public void displayTeam() {
+        header();
+        System.out.printf("%-10s %10s  %s  %s%n", "Last", "First", "Ht", "Exp");
+        for (Player player : mTeamMembers) {
+            System.out.printf("%-10s %10s  %s  %s%n", player.getLastName(),
+                    player.getFirstName(), player.getHeightInInches(),
+                    player.isPreviousExperience());
+        }
+    }
+
+    public void displayTeamByHeight() {
+        Map<Integer, Integer> heights = new HashMap<>();
+        header();
+        System.out.println("Height(In):       Player(s)  ");
+        for (Player player : mTeamMembers) {
+            Integer count = heights.get(player.getHeightInInches());
+            if (count == null) {
+                count = 0;
+            }
+            count++;
+            heights.put(player.getHeightInInches(), count);
+        }
+        for (Map.Entry<Integer, Integer> option : heights.entrySet()) {
+            System.out.printf("%-20d  %d %n", option.getKey(), option.getValue());
+
+        }
+    }
+
+    public void displayExperience() {
+        header();
+
+
     }
 }

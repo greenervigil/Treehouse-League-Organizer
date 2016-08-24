@@ -20,13 +20,15 @@ public class Menu {
         mReader  = new BufferedReader(new InputStreamReader(System.in));
         mMenu = new HashMap<>();
 
+
         mMenu.put("1", "Create New Team");
         mMenu.put("2", "Add Player to a Team");
         mMenu.put("3", "Remove Player From a Team");
         mMenu.put("4", "Team Roster");
         mMenu.put("5", "Team By Height");
-        mMenu.put("6", "League Balance Report");
-        mMenu.put("7", "Exit");
+        mMenu.put("6", "Team Experience Report");
+        mMenu.put("7", "League Balance Report");
+        mMenu.put("8", "Exit");
 
     }
 
@@ -42,7 +44,7 @@ public class Menu {
                 switch (input) {
                     case "1":
                         //create new team
-                        if ((mTeams.size() < (mPlayers.size() / Team.MAX_MEMBERS)) || isTeamAvailable() ){
+                        if (checkAvailableTeams(mPlayers) || isTeamAvailable() ){
                             mTeams.add(promptNewTeam());
                             System.out.println("Team added.");
                         } else {
@@ -71,16 +73,20 @@ public class Menu {
                         team.displayTeam();
                         break;
                     case "5":
-
                         //Team report sorted by height
                         team = getTeamSelection();
                         team.displayTeamByHeight();
                         break;
                     case "6":
+                        //Experience report by team
+                        team = getTeamSelection();
+                        team.displayExperience();
+                        break;
+                    case "7":
                         //League Balance report by team
                         leagueBalance();
                         break;
-                    case "7":
+                    case "8":
                         System.out.println("Good Bye!!");
                         break;
                     default:
@@ -92,7 +98,7 @@ public class Menu {
                 ioe.printStackTrace();
             }
 
-        } while (!input.equals("7"));
+        } while (!input.equals("8"));
 
     }
 
@@ -115,18 +121,14 @@ public class Menu {
         return mReader.readLine();
     }
 
-    private String promptForCoachName() throws IOException{
+    private String promptForCoachName() throws IOException {
         System.out.println("Who is the coach:  ");
         return mReader.readLine();
     }
 
-    private boolean checkAvailableTeams(List<Player> players){
-        System.out.println((mTeams.size() < (players.size() / Team.MAX_MEMBERS)));
-        return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
-    }
-
     private int promptTeamChoice(List<Team> teams) throws IOException{
         int counter = 1;
+
         for(Team team : teams){
             System.out.printf("%d ).  %s%n", counter, team.getName());
             counter++;
@@ -136,10 +138,16 @@ public class Menu {
         return choice - 1;
     }
 
+    private boolean checkAvailableTeams(List<Player> players){
+        System.out.println((mTeams.size() < (players.size() / Team.MAX_MEMBERS)));
+        return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
+    }
+
     private int promptPlayerChoice(List<Player> players) throws IOException{
-        int counter =1;
+        Integer counter =1;
+
         for (Player player : players) {
-            System.out.printf("%d).  %s\t\t%s\t%s\t%s %n", counter, player.getLastName(),
+            System.out.printf("%s  %s %s %s %s %n", counter.toString(), player.getLastName(),
                     player.getFirstName(), player.getHeightInInches(), player.isPreviousExperience());
             counter++;
         }
@@ -162,10 +170,14 @@ public class Menu {
 
     private void leagueBalance() {
         for (Team team : mTeams){
-            System.out.println(team.getName());
-            System.out.printf("Experienced Team members:  %d%n", team.experienceTally());
+            System.out.println("---------------------------------");
+            System.out.println("Team name: " + team.getName() + "    Coach: " + team.getCoach());
+            System.out.println("---------------------------------");
+            System.out.printf("Experienced Team members  :  %d%n", team.experienceTally());
             System.out.printf("Inexperienced Team members:  %d%n",
-                    (team.experienceTally() - team.getTeamMembers().size()));
+                    (team.getTeamMembers().size() - team.experienceTally()));
+            float percent = ( ((float) team.experienceTally() / (float) team.getTeamMembers().size()) * 100);
+            System.out.println("Experience %       :  " + percent + "%" );
         }
     }
 
