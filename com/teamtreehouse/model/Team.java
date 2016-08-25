@@ -7,13 +7,13 @@ public class Team {
 
     private String name;
     private String coach;
-    private List<Player> mTeamMembers;
+    private Set<Player> mTeamMembers;
     public static final int MAX_MEMBERS = 11;
 
     public Team(String name, String coach) {
         this.name = name;
         this.coach = coach;
-        mTeamMembers = new ArrayList<>();
+        mTeamMembers = new TreeSet<>();
     }
 
     public String getName() {
@@ -25,12 +25,24 @@ public class Team {
     }
 
     public List<Player> getTeamMembers() {
-        return mTeamMembers;
+        List<Player> players = new ArrayList<>();
+        for (Player player : mTeamMembers){
+            players.add(new Player(
+                    player.getFirstName(),
+                    player.getLastName(),
+                    player.getHeightInInches(),
+                    player.isPreviousExperience()));
+        }
+        return players;
     }
 
     public void addPlayer(Player player) {
         if (mTeamMembers.size() < MAX_MEMBERS) {
-            mTeamMembers.add(player);
+            mTeamMembers.add(new Player(
+                    player.getFirstName(),
+                    player.getLastName(),
+                    player.getHeightInInches(),
+                    player.isPreviousExperience()));
         } else {
             System.out.println("Team is full.  ");
         }
@@ -64,20 +76,18 @@ public class Team {
     }
 
     public void displayTeamByHeight() {
+        Integer count = 1;
         Map<Integer, Integer> heights = new HashMap<>();
         header();
         System.out.println("Height(In):       Player(s)  ");
         for (Player player : mTeamMembers) {
-            Integer count = heights.get(player.getHeightInInches());
-            if (count == null) {
-                count = 0;
-            }
+            Integer height = player.getHeightInInches();
+            heights.put(height, count);
             count++;
-            heights.put(player.getHeightInInches(), count);
         }
         for (Map.Entry<Integer, Integer> option : heights.entrySet()) {
-            System.out.printf("%-20d  %d %n", option.getKey(), option.getValue());
-
+            System.out.printf("%-20d  %d%n", option.getKey(), option.getValue());
+            //System.out.printf(" %s %n", (option.getValue()));
         }
     }
 

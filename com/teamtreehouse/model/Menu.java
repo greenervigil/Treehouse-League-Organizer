@@ -10,7 +10,7 @@ public class Menu {
 
     private BufferedReader mReader;
     private List<Player> mPlayers;
-    private Map<String, String> mMenu;
+    private List<String> mMenu;
     private List<Team> mTeams;
 
 
@@ -18,17 +18,26 @@ public class Menu {
         mPlayers = toList(players);
         mTeams = new ArrayList<>();
         mReader  = new BufferedReader(new InputStreamReader(System.in));
-        mMenu = new HashMap<>();
+        mMenu = new ArrayList<>();
 
 
-        mMenu.put("1", "Create New Team");
-        mMenu.put("2", "Add Player to a Team");
-        mMenu.put("3", "Remove Player From a Team");
-        mMenu.put("4", "Team Roster");
-        mMenu.put("5", "Team By Height");
-        mMenu.put("6", "Team Experience Report");
-        mMenu.put("7", "League Balance Report");
-        mMenu.put("8", "Exit");
+        mMenu.add("Create New Team");
+        mMenu.add("Add Player to a Team");
+        mMenu.add("Remove Player From a Team");
+        mMenu.add("Team Roster");
+        mMenu.add("Team By Height");
+        mMenu.add("Team Experience Report");
+        mMenu.add("League Balance Report");
+        mMenu.add("Exit");
+
+//        mMenu.put("1", "Create New Team");
+//        mMenu.put("2", "Add Player to a Team");
+//        mMenu.put("3", "Remove Player From a Team");
+//        mMenu.put("4", "Team Roster");
+//        mMenu.put("5", "Team By Height");
+//        mMenu.put("6", "Team Experience Report");
+//        mMenu.put("7", "League Balance Report");
+//        mMenu.put("8", "Exit");
 
     }
 
@@ -36,11 +45,11 @@ public class Menu {
     public void run() {
         String input = "";
         Team team;
-        Player player;
+
 
         do {
             try {
-                input = promptAction();
+                input = promptAction(mMenu);
                 switch (input) {
                     case "1":
                         //create new team
@@ -55,17 +64,21 @@ public class Menu {
                     case "2":
                         //Add player to team
                         team = getTeamSelection();
-                        player = getPlayerSelection(mPlayers);
+
                         if (isTeamAvailable()) {
                             System.out.println("There are no teams created yet.  Please add a team first.");
                         }else {
-                            team.addPlayer(player);
+                            team.addPlayer(getPlayerSelection(mPlayers));
                         }
                         break;
                     case "3":
                         //Remove Player from team
                         team = getTeamSelection();
-                        mPlayers.add(getPlayerSelection(team.getTeamMembers()));
+                        if (team.getTeamMembers() == null){
+                            System.out.println("No players added to the " + team.getName() + " team.");
+                        } else {
+                            mPlayers.add(getPlayerSelection(team.getTeamMembers()));
+                        }
                         break;
                     case "4":
                         //Team Roster in alphabetical order
@@ -103,11 +116,17 @@ public class Menu {
     }
 
 
-    private String promptAction() throws IOException{
-        for (Map.Entry<String, String> option : mMenu.entrySet()) {
+    private String promptAction(List<String> list) throws IOException{
+        Map<String, String> menuList = new HashMap<>();
+        Integer count = 1;
+        for (String s : list){
+            menuList.put(count.toString(), s);
+            count++;
+        }
+        for (Map.Entry<String, String> option : menuList.entrySet()) {
             System.out.printf("%s - %s %n", option.getKey(), option.getValue());
         }
-        System.out.print("What do you want to do: ");
+        System.out.print("Make a selection: ");
         String choice = mReader.readLine();
         return choice.trim().toLowerCase();
     }
@@ -127,24 +146,24 @@ public class Menu {
     }
 
     private int promptTeamChoice(List<Team> teams) throws IOException{
-        int counter = 1;
-
+        List<String> teamNames = new ArrayList<>();
         for(Team team : teams){
-            System.out.printf("%d ).  %s%n", counter, team.getName());
-            counter++;
+            teamNames.add(team.getName());
         }
-        System.out.print("Select a team:  ");
-        int choice = Integer.parseInt(mReader.readLine().trim());
-        return choice - 1;
+//        System.out.print("Select a team:  ");
+//        int choice = Integer.parseInt(mReader.readLine().trim());
+//        return choice - 1;
+        return (Integer.parseInt(promptAction(teamNames) )-1);
+
     }
 
     private boolean checkAvailableTeams(List<Player> players){
-        System.out.println((mTeams.size() < (players.size() / Team.MAX_MEMBERS)));
+        System.out.println((mTeams.size() <= (players.size() / Team.MAX_MEMBERS)));
         return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
     }
 
     private int promptPlayerChoice(List<Player> players) throws IOException{
-        Integer counter =1;
+        Integer counter = 1;
 
         for (Player player : players) {
             System.out.printf("%s  %s %s %s %s %n", counter.toString(), player.getLastName(),
