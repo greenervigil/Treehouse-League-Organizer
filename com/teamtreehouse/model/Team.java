@@ -2,18 +2,17 @@ package com.teamtreehouse.model;
 
 import java.util.*;
 
-
 public class Team {
 
     private String name;
     private String coach;
-    private Set<Player> mTeamMembers;
+    private List<Player> mPlayers;
     public static final int MAX_MEMBERS = 11;
 
     public Team(String name, String coach) {
         this.name = name;
         this.coach = coach;
-        mTeamMembers = new TreeSet<>();
+        mPlayers = new ArrayList<>();
     }
 
     public String getName() {
@@ -24,76 +23,45 @@ public class Team {
         return coach;
     }
 
-    public List<Player> getTeamMembers() {
-        List<Player> players = new ArrayList<>();
-        for (Player player : mTeamMembers){
-            players.add(new Player(
-                    player.getFirstName(),
-                    player.getLastName(),
-                    player.getHeightInInches(),
-                    player.isPreviousExperience()));
-        }
-        return players;
+    public void addPlayers(Player player) {
+        mPlayers.add(player);
     }
 
-    public void addPlayer(Player player) {
-        if (mTeamMembers.size() < MAX_MEMBERS) {
-            mTeamMembers.add(new Player(
-                    player.getFirstName(),
-                    player.getLastName(),
-                    player.getHeightInInches(),
-                    player.isPreviousExperience()));
-        } else {
-            System.out.println("Team is full.  ");
-        }
+    public int getPlayerCount() {
+        return mPlayers.size();
     }
 
-    public int experienceTally () {
-        int count = 0;
-        for (Player player : mTeamMembers) {
-            if(player.isPreviousExperience()) {
-                count++;
+    private Map<String, List<Player>> byPlayer() {
+        Map<String, List<Player>> byPlayer = new HashMap<>();
+        for(Player player : mPlayers) {
+            List<Player> players = byPlayer.get(player.getLastName());
+            if (players == null ){
+                players = new ArrayList<>();
+                byPlayer.put(player.getLastName(), players);
             }
+            players.add(player);
         }
-        return count;
+        return byPlayer;
     }
 
-    //REPORTING
-    private void header() {
-        System.out.println("---------------------------------");
-        System.out.println("Team name: " + getName() + "  Coach: " + getCoach());
-        System.out.println("---------------------------------");
+    public Set<String> getPlayers() {
+        return byPlayer().keySet();
     }
 
-    public void displayTeam() {
-        header();
-        System.out.printf("%-10s %10s  %s  %s%n", "Last", "First", "Ht", "Exp");
-        for (Player player : mTeamMembers) {
-            System.out.printf("%-10s %10s  %s  %s%n", player.getLastName(),
-                    player.getFirstName(), player.getHeightInInches(),
-                    player.isPreviousExperience());
-        }
-    }
-
-    public void displayTeamByHeight() {
-        Integer count = 1;
-        Map<Integer, Integer> heights = new HashMap<>();
-        header();
-        System.out.println("Height(In):       Player(s)  ");
-        for (Player player : mTeamMembers) {
-            Integer height = player.getHeightInInches();
-            heights.put(height, count);
-            count++;
-        }
-        for (Map.Entry<Integer, Integer> option : heights.entrySet()) {
-            System.out.printf("%-20d  %d%n", option.getKey(), option.getValue());
-            //System.out.printf(" %s %n", (option.getValue()));
-        }
-    }
-
-    public void displayExperience() {
-        header();
+//    public int experienceTally () {
+//        int count = 0;
+//        for (Player player : mTeamMembers) {
+//            if(player.isPreviousExperience()) {
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
 
 
+
+    @Override
+    public String toString() {
+        return String.format("%s team coached by %s%n", getName(), getCoach());
     }
 }
