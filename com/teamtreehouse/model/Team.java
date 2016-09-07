@@ -48,15 +48,15 @@ public class Team {
         return byPlayer().keySet();
     }
 
-//    public int experienceTally () {
-//        int count = 0;
-//        for (Player player : mTeamMembers) {
-//            if(player.isPreviousExperience()) {
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
+    public int experienceTally () {
+        int count = 0;
+        for (Player player : mPlayers) {
+            if(player.isPreviousExperience()) {
+                count++;
+            }
+        }
+        return count;
+    }
 
 
 

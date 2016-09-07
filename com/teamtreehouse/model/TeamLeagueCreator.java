@@ -69,7 +69,7 @@ public class TeamLeagueCreator {
                     case "2":
                         //Add player to team
                         team = promptTeamChoice();
-                        Player player = promptPlayerChoice();
+                        Player player = promptPlayerChoice(team);
                         if (isTeamAvailable()) {
                             System.out.println("There are no teams created yet.  Please add a team first.");
                         }else {
@@ -84,17 +84,17 @@ public class TeamLeagueCreator {
                         break;
                     case "3":
                         //Remove Player from team
-//                        team = getTeamSelection();
-//                        if (team.getTeamMembers() == null){
-//                            System.out.println("No players added to the " + team.getName() + " team.");
-//                        } else {
-//                            mPlayers.add(getPlayerSelection(team.getTeamMembers()));
-//                        }
+                        team = promptTeamChoice();
+                        if (team.getPlayers() == null){
+                            System.out.println("No players added to the " + team.getName() + " team.");
+                        } else {
+                            mPlayers.add(promptPlayerChoice(team));
+                        }
                         break;
                     case "4":
                         //Team Roster in alphabetical order
-//                        team = getTeamSelection();
-//                        team.displayTeam();
+                        team = promptTeamChoice();
+                        team.getPlayers();
                         break;
                     case "5":
                         //Team report sorted by height
@@ -164,9 +164,9 @@ public class TeamLeagueCreator {
         return (mTeams.size() < (players.size() / Team.MAX_MEMBERS));
     }
 
-    private Player promptPlayerChoice() throws IOException{
+    private Player promptPlayerChoice(Team team) throws IOException{
         System.out.println("Available Players:  ");
-        List<String> playerNames = new ArrayList<>();
+        List<String> playerNames = new ArrayList<>(team.getPlayers());
         for (Player player : mPlayers) {
             playerNames.add(player.getLastName() + ", " + player.getFirstName());
         }
